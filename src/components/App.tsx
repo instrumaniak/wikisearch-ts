@@ -26,7 +26,7 @@ const App: React.FC = () => {
   }) // set theme: light / dark
   
   const toggleTheme = () => {
-    let newPaletteType = theme.palette.type == "light" ? "dark" : "light"
+    let newPaletteType = theme.palette.type === "light" ? "dark" : "light"
     setTheme({
       palette: {
         type: newPaletteType

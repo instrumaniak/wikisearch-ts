@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginBottom: theme.spacing(2),
       '&:hover': {
         //backgroundColor: theme.palette.action.hover //Grey[200]
-        backgroundColor: theme.palette.type == "light" ? Grey[200] : Grey[700]
+        backgroundColor: theme.palette.type === "light" ? Grey[200] : Grey[700]
       }
     },
     title: {
