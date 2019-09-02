@@ -5,7 +5,7 @@ import Button from "@material-ui/core/Button"
 import TextField from "@material-ui/core/TextField"
 import LinearProgress from "@material-ui/core/LinearProgress"
 import CssBaseline from "@material-ui/core/CssBaseline"
-import { createMuiTheme } from "@material-ui/core/styles"
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles"
 import { StylesProvider } from "@material-ui/styles"
 
 import { ThemeProvider } from "styled-components"
@@ -13,12 +13,26 @@ import { ThemeProvider } from "styled-components"
 import ListGroup from "./ListGroup"
 import NavBar from "./NavBar"
 
-const defaultTheme = createMuiTheme()
+//const defaultTheme = createMuiTheme()
 
 const App: React.FC = () => {
   const [input, setInput] = useState<string>("") // search text input
   const [results, setResults] = useState<any[]>([]) // results data from API
   const [isLoading, setIsLoading] = useState<boolean>(false) // show loading bar
+  const [theme, setTheme] = useState<any>({
+    palette: {
+      type: "light"
+    }
+  }) // set theme: light / dark
+  
+  const toggleTheme = () => {
+    let newPaletteType = theme.palette.type == "light" ? "dark" : "light"
+    setTheme({
+      palette: {
+        type: newPaletteType
+      }
+    })
+  }
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInput(event.target.value)
@@ -55,14 +69,17 @@ const App: React.FC = () => {
       setIsLoading(false)
     }
   }
+  
+  const muiTheme = createMuiTheme(theme)
 
   return (
     <StylesProvider injectFirst>
-      <ThemeProvider theme={defaultTheme}>
+      <MuiThemeProvider theme={muiTheme}>
+      <ThemeProvider theme={muiTheme}>
         <>
           <CssBaseline />
           { isLoading && <LinearProgress style={{ zIndex: 2000 }} /> }
-          <NavBar />
+          <NavBar toggleTheme={toggleTheme} />
 
           <div className="wiki-box">
             <TextField
@@ -94,6 +111,7 @@ const App: React.FC = () => {
           </div>
         </>
       </ThemeProvider>
+      </MuiThemeProvider>
     </StylesProvider>
   )
 }
