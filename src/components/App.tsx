@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import _ from "lodash"
 
 import Button from "@material-ui/core/Button"
@@ -15,23 +15,19 @@ import NavBar from "./NavBar"
 
 //const defaultTheme = createMuiTheme()
 
+type ThemeType = 'light' | 'dark'
+
 const App: React.FC = () => {
   const [input, setInput] = useState<string>("") // search text input
   const [results, setResults] = useState<any[]>([]) // results data from API
   const [isLoading, setIsLoading] = useState<boolean>(false) // show loading bar
-  const [theme, setTheme] = useState<any>({
-    palette: {
-      type: "light"
-    }
-  }) // set theme: light / dark
+  
+  const getLocalTheme = ():ThemeType => (window.localStorage.getItem('theme') || "light") as ThemeType
+  const [theme, setTheme] = useState<ThemeType>(getLocalTheme) // set theme: light / dark
   
   const toggleTheme = () => {
-    let newPaletteType = theme.palette.type === "light" ? "dark" : "light"
-    setTheme({
-      palette: {
-        type: newPaletteType
-      }
-    })
+    let newTheme: ThemeType = theme === "light" ? "dark" : "light"
+    setTheme(newTheme)
   }
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,7 +66,16 @@ const App: React.FC = () => {
     }
   }
   
-  const muiTheme = createMuiTheme(theme)
+  const muiTheme = createMuiTheme({
+    palette: {
+      type: theme
+    }
+  })
+
+  // save theme settings for restoring after page refresh
+  useEffect(()=> {
+    window.localStorage.setItem('theme', theme)
+  }, [ theme ])
 
   return (
     <StylesProvider injectFirst>
