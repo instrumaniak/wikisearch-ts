@@ -7,7 +7,7 @@ import LinearProgress from "@material-ui/core/LinearProgress"
 import CssBaseline from "@material-ui/core/CssBaseline"
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles"
 import { StylesProvider } from "@material-ui/styles"
-
+import SearchIcon from "@material-ui/icons/Search"
 import { ThemeProvider } from "styled-components"
 
 import ListGroup from "./ListGroup"
@@ -25,6 +25,7 @@ const App: React.FC = () => {
   const getLocalTheme = (): ThemeType =>
     (window.localStorage.getItem("theme") || "light") as ThemeType
   const [theme, setTheme] = useState<ThemeType>(getLocalTheme) // set theme: light / dark
+  const buttonVariant = theme === "light" ? "outlined" : "contained"
 
   const toggleTheme = () => {
     let newTheme: ThemeType = theme === "light" ? "dark" : "light"
@@ -113,19 +114,28 @@ const App: React.FC = () => {
               </Typography>
 
               <div className="wiki-btns">
-                <Button variant="outlined" color="secondary" onClick={clear}>
+                <Button
+                  variant={buttonVariant}
+                  color="secondary"
+                  onClick={clear}
+                >
                   Clear
                 </Button>{" "}
                 <Button
-                  variant="outlined"
+                  variant={buttonVariant}
                   onClick={() =>
                     window.open("https://en.wikipedia.org/wiki/Special:Random")
                   }
                 >
                   Random
                 </Button>{" "}
-                <Button variant="outlined" color="primary" onClick={getResults}>
-                  Search
+                <Button
+                  variant={buttonVariant}
+                  color="primary"
+                  onClick={getResults}
+                >
+                  <SearchIcon fontSize="small" />
+                  &nbsp; Search
                 </Button>
               </div>
 
