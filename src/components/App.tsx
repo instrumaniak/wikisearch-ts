@@ -12,19 +12,20 @@ import { ThemeProvider } from "styled-components"
 
 import ListGroup from "./ListGroup"
 import NavBar from "./NavBar"
+import { Typography } from "@material-ui/core"
 
-//const defaultTheme = createMuiTheme()
-
-type ThemeType = 'light' | 'dark'
+type ThemeType = "light" | "dark"
 
 const App: React.FC = () => {
   const [input, setInput] = useState<string>("") // search text input
   const [results, setResults] = useState<any[]>([]) // results data from API
   const [isLoading, setIsLoading] = useState<boolean>(false) // show loading bar
-  
-  const getLocalTheme = ():ThemeType => (window.localStorage.getItem('theme') || "light") as ThemeType
+  const [isError, setIsError] = useState<boolean>(false) // Error for text input
+
+  const getLocalTheme = (): ThemeType =>
+    (window.localStorage.getItem("theme") || "light") as ThemeType
   const [theme, setTheme] = useState<ThemeType>(getLocalTheme) // set theme: light / dark
-  
+
   const toggleTheme = () => {
     let newTheme: ThemeType = theme === "light" ? "dark" : "light"
     setTheme(newTheme)
@@ -46,6 +47,7 @@ const App: React.FC = () => {
   const clear = () => {
     setInput("")
     setResults([])
+    setIsError(false)
   }
 
   const getResults = async () => {
@@ -63,9 +65,11 @@ const App: React.FC = () => {
 
       setResults(data)
       setIsLoading(false)
+    } else {
+      setIsError(true)
     }
   }
-  
+
   const muiTheme = createMuiTheme({
     palette: {
       type: theme
@@ -73,49 +77,62 @@ const App: React.FC = () => {
   })
 
   // save theme settings for restoring after page refresh
-  useEffect(()=> {
-    window.localStorage.setItem('theme', theme)
-  }, [ theme ])
+  useEffect(() => {
+    window.localStorage.setItem("theme", theme)
+  }, [theme])
 
   return (
     <StylesProvider injectFirst>
       <MuiThemeProvider theme={muiTheme}>
-      <ThemeProvider theme={muiTheme}>
-        <>
-          <CssBaseline />
-          { isLoading && <LinearProgress style={{ zIndex: 2000 }} /> }
-          <NavBar toggleTheme={toggleTheme} />
+        <ThemeProvider theme={muiTheme}>
+          <>
+            <CssBaseline />
+            {isLoading && <LinearProgress style={{ zIndex: 2000 }} />}
+            <NavBar toggleTheme={toggleTheme} />
 
-          <div className="wiki-box">
-            <TextField
-              label="What do you want to search?..."
-              value={input}
-              onChange={handleInput}
-              onKeyUp={handleKeys}
-              fullWidth
-            />
+            <div className="wiki-box">
+              <TextField
+                label="What do you want to search?..."
+                value={input}
+                onChange={handleInput}
+                onKeyUp={handleKeys}
+                fullWidth
+                error={isError}
+              />
 
-            <div className="wiki-btns">
-              <Button variant="outlined" color="secondary" onClick={clear}>
-                Clear
-              </Button>{" "}
-              <Button
-                variant="outlined"
-                onClick={() =>
-                  window.open("https://en.wikipedia.org/wiki/Special:Random")
-                }
+              <Typography
+                display="block"
+                color={isError ? "error" : "textPrimary"}
+                variant="caption"
               >
-                Random
-              </Button>{" "}
-              <Button variant="outlined" color="primary" onClick={getResults}>
-                Search
-              </Button>
-            </div>
+                {isError ? (
+                  "* Search keyword must not be empty."
+                ) : (
+                  <span>&nbsp;</span>
+                )}
+              </Typography>
 
-            <ListGroup results={results} />
-          </div>
-        </>
-      </ThemeProvider>
+              <div className="wiki-btns">
+                <Button variant="outlined" color="secondary" onClick={clear}>
+                  Clear
+                </Button>{" "}
+                <Button
+                  variant="outlined"
+                  onClick={() =>
+                    window.open("https://en.wikipedia.org/wiki/Special:Random")
+                  }
+                >
+                  Random
+                </Button>{" "}
+                <Button variant="outlined" color="primary" onClick={getResults}>
+                  Search
+                </Button>
+              </div>
+
+              <ListGroup results={results} />
+            </div>
+          </>
+        </ThemeProvider>
       </MuiThemeProvider>
     </StylesProvider>
   )
