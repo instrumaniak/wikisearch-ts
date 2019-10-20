@@ -6,9 +6,7 @@ import TextField from "@material-ui/core/TextField"
 import LinearProgress from "@material-ui/core/LinearProgress"
 import CssBaseline from "@material-ui/core/CssBaseline"
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles"
-import { StylesProvider } from "@material-ui/styles"
 import SearchIcon from "@material-ui/icons/Search"
-import { ThemeProvider } from "styled-components"
 
 import ListGroup from "./ListGroup"
 import NavBar from "./NavBar"
@@ -83,68 +81,54 @@ const App: React.FC = () => {
   }, [theme])
 
   return (
-    <StylesProvider injectFirst>
-      <MuiThemeProvider theme={muiTheme}>
-        <ThemeProvider theme={muiTheme}>
-          <>
-            <CssBaseline />
-            {isLoading && <LinearProgress style={{ zIndex: 2000 }} />}
-            <NavBar toggleTheme={toggleTheme} />
+    <MuiThemeProvider theme={muiTheme}>
+      <CssBaseline />
+      {isLoading && <LinearProgress style={{ zIndex: 2000 }} />}
+      <NavBar toggleTheme={toggleTheme} />
 
-            <div className="wiki-box">
-              <TextField
-                label="What do you want to search?..."
-                value={input}
-                onChange={handleInput}
-                onKeyUp={handleKeys}
-                fullWidth
-                error={isError}
-              />
+      <div className="wiki-box">
+        <TextField
+          label="What do you want to search?..."
+          value={input}
+          onChange={handleInput}
+          onKeyUp={handleKeys}
+          fullWidth
+          error={isError}
+        />
 
-              <Typography
-                display="block"
-                color={isError ? "error" : "textPrimary"}
-                variant="caption"
-              >
-                {isError ? (
-                  "* Search keyword must not be empty."
-                ) : (
-                  <span>&nbsp;</span>
-                )}
-              </Typography>
+        <Typography
+          display="block"
+          color={isError ? "error" : "textPrimary"}
+          variant="caption"
+        >
+          {isError ? (
+            "* Search keyword must not be empty."
+          ) : (
+            <span>&nbsp;</span>
+          )}
+        </Typography>
 
-              <div className="wiki-btns">
-                <Button
-                  variant={buttonVariant}
-                  color="secondary"
-                  onClick={clear}
-                >
-                  Clear
-                </Button>{" "}
-                <Button
-                  variant={buttonVariant}
-                  onClick={() =>
-                    window.open("https://en.wikipedia.org/wiki/Special:Random")
-                  }
-                >
-                  Random
-                </Button>{" "}
-                <Button
-                  variant={buttonVariant}
-                  color="primary"
-                  onClick={getResults}
-                >
-                  <SearchIcon fontSize="small" />
-                  &nbsp; Search
-                </Button>
-              </div>
+        <div className="wiki-btns">
+          <Button variant={buttonVariant} color="secondary" onClick={clear}>
+            Clear
+          </Button>{" "}
+          <Button
+            variant={buttonVariant}
+            onClick={() =>
+              window.open("https://en.wikipedia.org/wiki/Special:Random")
+            }
+          >
+            Random
+          </Button>{" "}
+          <Button variant={buttonVariant} color="primary" onClick={getResults}>
+            <SearchIcon fontSize="small" />
+            &nbsp; Search
+          </Button>
+        </div>
 
-              <ListGroup results={results} />
-            </div>
-          </>
-        </ThemeProvider>
-      </MuiThemeProvider>
-    </StylesProvider>
+        <ListGroup results={results} />
+      </div>
+    </MuiThemeProvider>
   )
 }
 

@@ -4,20 +4,16 @@
 
 import React, { Fragment } from "react"
 import Typography from "@material-ui/core/Typography"
-import styled from "styled-components"
 
 import ListItem from "./ListItem"
 
-const StyledWrapper = styled.div`
-  margin-top: 4rem;
-`
 interface IListGroupProps {
   results: any[]
 }
 
 const ListGroup: React.FC<IListGroupProps> = ({ results }) => {
   return (
-    <StyledWrapper>
+    <div style={{ marginTop: "4rem" }}>
       {results.length > 0 && (
         <div>
           <Typography variant="h4" gutterBottom>
@@ -37,7 +33,7 @@ const ListGroup: React.FC<IListGroupProps> = ({ results }) => {
           })}
         </div>
       )}
-    </StyledWrapper>
+    </div>
   )
 }
 
